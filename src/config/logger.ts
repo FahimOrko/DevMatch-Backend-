@@ -1,17 +1,20 @@
 import pino from "pino";
+import { environment } from "./secrets";
+
+const isProd = environment === "production";
 
 const log = pino({
-  base: {
-    pid: false,
-  },
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-      translateTime: "yyyy-mm-dd HH:MM:ss",
-      ignore: "hostname",
-    },
-  },
+  level: isProd ? "info" : "debug",
+  base: null,
+  transport: !isProd
+    ? {
+        target: "pino-pretty",
+        options: {
+          colorize: true,
+          translateTime: "yyyy-mm-dd HH:MM:ss",
+        },
+      }
+    : undefined,
 });
 
 export default log;
